@@ -9,4 +9,9 @@
         <item>1º Grau (ax + b)</item>
         <item>2º Grau (ax² + bx + c)</item>
     </string-array>
+    <string-array name="analise_tipos">
+        <item>Permutação</item>
+        <item>Arranjo</item>
+        <item>Combinação</item>
+    </string-array>
 </resources>

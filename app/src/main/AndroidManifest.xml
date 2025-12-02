@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Ceos"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".analise"
+            android:exported="false" />
+        <activity
             android:name=".funcao"
             android:exported="false" />
         <activity

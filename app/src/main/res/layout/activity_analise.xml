@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".funcao">
+    tools:context=".analise">
 
     <!-- Header -->
     <com.google.android.material.appbar.AppBarLayout
@@ -29,7 +29,6 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp">
 
-                <!-- Left: Logo and Title -->
                 <ImageView
                     android:id="@+id/logo_image"
                     android:layout_width="32dp"
@@ -49,34 +48,21 @@
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/logo_image"
+                    app:layout_constraintStart_toEndOf="@id/logo_image"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.appbar.MaterialToolbar>
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout> <!-- CORREÇÃO: AppBarLayout fechado aqui -->
 
-    <!-- Title -->
-    <TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Função"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
+    <!-- CORREÇÃO: ScrollView movido para fora do AppBarLayout -->
     <ScrollView
-        android:id="@+id/content_scroll"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/textViewTitle"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -85,39 +71,46 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="16dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Análise Combinatória"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginTop="8dp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp">
 
-                <!-- CORREÇÃO APLICADA AQUI: Removido o ConstraintLayout duplicado -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp">
 
                     <TextView
-                        android:id="@+id/textViewTipoFuncaoLabel"
+                        android:id="@+id/textViewTipoLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tipo de Função"
+                        android:text="Tipo"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Spinner
-                        android:id="@+id/spinnerTipoFuncao"
+                        android:id="@+id/spinnerTipo"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:entries="@array/funcao_tipos"
+                        android:entries="@array/analise_tipos"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textViewTipoFuncaoLabel" />
+                        app:layout_constraintTop_toBottomOf="@+id/textViewTipoLabel" />
 
                     <LinearLayout
                         android:id="@+id/linearLayoutInputs"
@@ -125,76 +118,41 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:orientation="horizontal"
+                        android:weightSum="2"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/spinnerTipoFuncao">
+                        app:layout_constraintTop_toBottomOf="@+id/spinnerTipo">
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/inputLayoutA"
+                            android:id="@+id/inputLayoutN"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginEnd="8dp"
-                            app:hintEnabled="false">
+                            android:layout_marginEnd="8dp">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/editTextA"
+                                android:id="@+id/editTextN"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="a"
-                                android:inputType="numberDecimal|numberSigned" />
+                                android:hint="n"
+                                android:inputType="number" />
 
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/inputLayoutB"
+                            android:id="@+id/inputLayoutK"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginEnd="8dp"
-                            app:hintEnabled="false">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/editTextB"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="b"
-                                android:inputType="numberDecimal|numberSigned" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/inputLayoutC"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="8dp"
                             android:visibility="gone"
-                            tools:visibility="visible"
-                            app:hintEnabled="false">
+                            tools:visibility="visible">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/editTextC"
+                                android:id="@+id/editTextK"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="c"
-                                android:inputType="numberDecimal|numberSigned" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/inputLayoutX"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:hintEnabled="false">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/editTextX"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="x"
-                                android:inputType="numberDecimal|numberSigned" />
+                                android:hint="k (opcional)"
+                                android:inputType="number" />
 
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -230,7 +188,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/buttonLimpar"
-                        tools:text="Resultado: 0.0" />
+                        tools:text="Resultado: 120" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -239,5 +197,6 @@
         </LinearLayout>
 
     </ScrollView>
+    <!-- CORREÇÃO: Tag sobrando removida daqui -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -32,6 +32,13 @@ class math : AppCompatActivity() {
             finish()
         }
 
+        //abre a tela de analise
+        val analiseCard = findViewById<CardView?>(R.id.anal_comb_card)
+        analiseCard?.setOnClickListener {
+            val intent = Intent(this, analise::class.java)
+            startActivity(intent)
+        }
+
         // Abre a tela de Estatística
         val estatisticaCard = findViewById<CardView?>(R.id.estatistica_card)
         estatisticaCard?.setOnClickListener {

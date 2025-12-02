@@ -31,9 +31,25 @@ class funcao : AppCompatActivity() {
     private lateinit var buttonLimpar: Button
     private lateinit var textViewResultado: TextView
 
+    private lateinit var home: TextView
+    private lateinit var homeIMG: ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_funcao)
+
+        home = findViewById<TextView>(R.id.logo_text)
+        homeIMG = findViewById<ImageView>(R.id.logo_image)
+        homeIMG.setOnClickListener {
+            val intent = Intent(this, home::class.java)
+            startActivity(intent)
+            finish()
+        }
+        home.setOnClickListener {
+            val intent = Intent(this, home::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         // Navegação
         val home = findViewById<TextView>(R.id.logo_text)

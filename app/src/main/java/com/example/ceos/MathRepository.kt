@@ -27,7 +27,7 @@ object MathRepository {
         api.angulo("radianosparagraus", AnguloRequest(valor))
     }
 
-    suspend fun funcao(tipo: String, params: JsonObject): JsonObject = withContext(Dispatchers.IO) {
+    suspend fun funcao(tipo: String, params: JsonObject): com.google.gson.JsonElement = withContext(Dispatchers.IO) {
         api.funcao(tipo, params)
     }
 

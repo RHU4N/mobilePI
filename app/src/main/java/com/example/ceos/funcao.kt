@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.JsonObject
+import com.google.gson.JsonElement
+import com.google.gson.JsonArray
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -46,19 +48,6 @@ class funcao : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-        val breadcrumbHome = findViewById<TextView>(R.id.breadcrumb_home)
-        breadcrumbHome.setOnClickListener{
-            val intent = Intent(this, home::class.java)
-            startActivity(intent)
-            finish()
-        }
-        val breadcrumbMath = findViewById<TextView>(R.id.breadcrumb_matematica)
-        breadcrumbMath.setOnClickListener{
-            val intent = Intent(this, math::class.java)
-            startActivity(intent)
-            finish()
-        }
-
 
         // Initialize views
         spinnerTipoFuncao = findViewById(R.id.spinnerTipoFuncao)
@@ -110,47 +99,114 @@ class funcao : AppCompatActivity() {
 
     private fun calcularFuncao() {
         val tipoIndex = spinnerTipoFuncao.selectedItemPosition
-        val tipo = if (tipoIndex == 0) "1-grau" else "2-grau"
+        // Map frontend selection to backend route names
+        val tipo = if (tipoIndex == 0) "linear" else "quadratica"
 
         val aText = editTextA.text.toString()
         val bText = editTextB.text.toString()
         val xText = editTextX.text.toString()
 
-        if (aText.isEmpty() || bText.isEmpty() || xText.isEmpty()) {
-            textViewResultado.text = "Preencha todos os campos obrigatórios."
-            return
+        // Validation differs by type:
+        // - linear: requires a and b; x is optional (if omitted we can solve ax + b = 0 locally)
+        // - quadratica: requires a, b, c; x is optional (if omitted, backend should return roots)
+        if (tipo == "linear") {
+            if (aText.isEmpty() || bText.isEmpty()) {
+                textViewResultado.text = "Preencha os campos a e b para função 1º grau. x é opcional (se vazio, será resolvido)."
+                return
+            }
+        } else {
+            // quadratica
+            val cText = editTextC.text.toString()
+            if (aText.isEmpty() || bText.isEmpty() || cText.isEmpty()) {
+                textViewResultado.text = "Preencha os campos a, b e c para função 2º grau. x é opcional (se vazio, serão retornadas as raízes)."
+                return
+            }
         }
 
         val params = JsonObject()
         params.addProperty("a", aText.toDouble())
         params.addProperty("b", bText.toDouble())
-        params.addProperty("x", xText.toDouble())
-
-        if (tipo == "2-grau") {
+        if (tipo == "quadratica") {
             val cText = editTextC.text.toString()
-            if (cText.isEmpty()) {
-                textViewResultado.text = "Preencha o valor de c."
-                return
-            }
             params.addProperty("c", cText.toDouble())
+            if (xText.isNotEmpty()) params.addProperty("x", xText.toDouble())
+        } else {
+            // linear: add x only if provided
+            if (xText.isNotEmpty()) params.addProperty("x", xText.toDouble())
         }
 
         lifecycleScope.launch {
             try {
-                val response = RetrofitClient.api.funcao(tipo, params)
-                if (response.has("resultado")) {
-                    val resultado = response.get("resultado").asDouble
-                    textViewResultado.text = "Resultado: $resultado"
-                } else if (response.has("error")) {
-                     textViewResultado.text = "Erro: ${response.get("error").asString}"
-                } else {
-                    textViewResultado.text = "Resposta inesperada da API."
-                }
-            } catch (e: IOException) {
-                textViewResultado.text = "Erro de conexão. Verifique sua internet."
+                val response = MathRepository.funcao(tipo, params)
+                // Normalize response similar to web front implementation
+                val display = normalizeFuncaoResponse(response)
+                textViewResultado.text = display
             } catch (e: Exception) {
-                textViewResultado.text = "Ocorreu um erro: ${e.message}"
+                // If API failed and it's linear with missing x, compute root locally
+                if (tipo == "linear" && xText.isEmpty()) {
+                    try {
+                        val a = aText.toDouble()
+                        val b = bText.toDouble()
+                        if (a == 0.0) {
+                            textViewResultado.text = "Equação degenerada (a = 0)."
+                        } else {
+                            val root = -b / a
+                            textViewResultado.text = "Resultado (resolvido localmente): x = ${root}"
+                        }
+                    } catch (inner: Exception) {
+                        textViewResultado.text = "Não foi possível resolver localmente: ${inner.message}"
+                    }
+                } else if (e is IOException) {
+                    textViewResultado.text = "Erro de conexão. Verifique sua internet."
+                } else {
+                    textViewResultado.text = "Ocorreu um erro: ${e.message}"
+                }
             }
         }
+    }
+
+    private fun normalizeFuncaoResponse(respElem: JsonElement?): String {
+        if (respElem == null || respElem.isJsonNull) return "Resposta vazia"
+        // If it's a primitive or array, delegate to formatter
+        if (!respElem.isJsonObject) {
+            return formatJsonElement(respElem)
+        }
+
+        val resp = respElem.asJsonObject
+        // Prefer 'resultado' field
+        val candidateKeys = listOf("resultado", "result", "value", "raizes", "raiz")
+        for (k in candidateKeys) {
+            if (resp.has(k)) {
+                return formatJsonElement(resp.get(k))
+            }
+        }
+        // If the object has a single primitive property, return it
+        val entries = resp.entrySet()
+        if (entries.size == 1) {
+            val v = entries.first().value
+            return formatJsonElement(v)
+        }
+        // Fallback: return whole payload as string
+        return resp.toString()
+    }
+
+    private fun formatJsonElement(elem: JsonElement?): String {
+        if (elem == null || elem.isJsonNull) return "Resultado: null"
+        if (elem.isJsonPrimitive) {
+            val prim = elem.asJsonPrimitive
+            return if (prim.isNumber) "Resultado: ${prim.asNumber}" else "Resultado: ${prim.asString}"
+        }
+        if (elem.isJsonArray) {
+            val arr = elem.asJsonArray
+            val parts = arr.map { e ->
+                when {
+                    e.isJsonPrimitive && e.asJsonPrimitive.isNumber -> e.asNumber.toString()
+                    e.isJsonPrimitive -> e.asString
+                    else -> e.toString()
+                }
+            }
+            return "Resultado: ${parts.joinToString(", ")}"
+        }
+        return "Resultado: ${elem.toString()}"
     }
 }

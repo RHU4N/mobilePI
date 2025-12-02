@@ -39,7 +39,7 @@ interface ApiService {
 
     // Funcao: POST /funcao/{tipo} - body is generic JSON (a,b,c,x etc.)
     @POST("funcao/{tipo}")
-    suspend fun funcao(@Path("tipo") tipo: String, @Body params: JsonObject): JsonObject
+    suspend fun funcao(@Path("tipo") tipo: String, @Body params: JsonObject): com.google.gson.JsonElement
 
     // Area: POST /area/{forma}
     @POST("area/{forma}")

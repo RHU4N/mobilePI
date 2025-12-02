@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Ceos</string>
+    <string-array name="estatistica_tipos">
+        <item>Média</item>
+        <item>Mediana</item>
+        <item>Moda</item>
+    </string-array>
+    <string-array name="funcao_tipos">
+        <item>1º Grau (ax + b)</item>
+        <item>2º Grau (ax² + bx + c)</item>
+    </string-array>
 </resources>

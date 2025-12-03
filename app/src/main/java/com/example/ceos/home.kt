@@ -2,10 +2,9 @@ package com.example.ceos
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.appcompat.widget.PopupMenu
 import com.google.android.material.button.MaterialButton
 
 class home : AppCompatActivity() {
@@ -13,16 +12,16 @@ class home : AppCompatActivity() {
     private lateinit var mathButton: MaterialButton
     private lateinit var fisicaButton: MaterialButton
     private lateinit var quimicaButton: MaterialButton
-
+    private lateinit var menuIcon: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_home)
 
         mathButton = findViewById(R.id.math_button)
         fisicaButton = findViewById(R.id.fisica_button)
         quimicaButton = findViewById(R.id.quimica_button)
+        menuIcon = findViewById(R.id.menu_icon)
 
         mathButton.setOnClickListener {
             // Navegue para a tela de matemática
@@ -42,5 +41,12 @@ class home : AppCompatActivity() {
             startActivity(intent)
         }
 
+        menuIcon.setOnClickListener {
+            showMenu(it)
+        }
+    }
+
+    private fun showMenu(anchor: android.view.View) {
+        HeaderMenuUtil.showHeaderMenu(this, anchor)
     }
 }

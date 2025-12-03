@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 object MathRepository {
-    private val api = RetrofitClient.api
+    private val api = RetrofitClient.mathApi
 
     suspend fun estatisticaMedia(valores: List<Double>): EstatisticaResponse = withContext(Dispatchers.IO) {
         api.estatistica("media", EstatisticaRequest(valores))

@@ -51,10 +51,16 @@
                     app:layout_constraintStart_toEndOf="@id/logo_image"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Center: Links -->
-
-
-                <!-- Right: Buttons -->
+                <!-- Right: Menu -->
+                <ImageView
+                    android:id="@+id/menu_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_menu"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginEnd="16dp" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -72,7 +78,7 @@
         app:cardCornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_bar_layout">
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -120,7 +126,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline_vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/premium_banner" />
+        app:layout_constraintTop_toBottomOf="@+id/premium_banner" />
 
     <TextView
         android:id="@+id/description"
@@ -129,9 +135,9 @@
         android:layout_marginTop="16dp"
         android:text="Facilitamos seus estudos de Física, Química e Matemática com uma ampla coleção de fórmulas e ferramentas interativas para cálculos rápidos e precisos. Seja para resolver exercícios, revisar conceitos ou aprofundar seu conhecimento, nosso site oferece uma experiência intuitiva e prática."
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@id/title"
+        app:layout_constraintEnd_toEndOf="@+id/title"
         app:layout_constraintStart_toStartOf="@+id/title"
-        app:layout_constraintTop_toBottomOf="@id/title" />
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_vertical"

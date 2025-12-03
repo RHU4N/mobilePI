@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.JsonObject
@@ -33,6 +34,7 @@ class funcao : AppCompatActivity() {
 
     private lateinit var home: TextView
     private lateinit var homeIMG: ImageView
+    private lateinit var menuIcon: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,20 +42,8 @@ class funcao : AppCompatActivity() {
 
         home = findViewById<TextView>(R.id.logo_text)
         homeIMG = findViewById<ImageView>(R.id.logo_image)
-        homeIMG.setOnClickListener {
-            val intent = Intent(this, home::class.java)
-            startActivity(intent)
-            finish()
-        }
-        home.setOnClickListener {
-            val intent = Intent(this, home::class.java)
-            startActivity(intent)
-            finish()
-        }
+        menuIcon = findViewById(R.id.menu_icon)
 
-        // Navegação
-        val home = findViewById<TextView>(R.id.logo_text)
-        val homeIMG = findViewById<ImageView>(R.id.logo_image)
         homeIMG.setOnClickListener {
             val intent = Intent(this, home::class.java)
             startActivity(intent)
@@ -111,6 +101,14 @@ class funcao : AppCompatActivity() {
             editTextX.text.clear()
             textViewResultado.text = ""
         }
+
+        menuIcon.setOnClickListener {
+            showMenu(it)
+        }
+    }
+
+    private fun showMenu(anchor: android.view.View) {
+        HeaderMenuUtil.showHeaderMenu(this, anchor)
     }
 
     private fun calcularFuncao() {

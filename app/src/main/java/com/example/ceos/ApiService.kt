@@ -25,6 +25,20 @@ data class FormaResponse(val forma: String, val perimetro: Double? = null, val a
 data class AnaliseRequest(val n: Int, val k: Int)
 data class AnaliseResponse(val tipo: String, val resultado: Double)
 
+// Auth / Users
+data class LoginRequest(val email: String, val senha: String)
+data class LoginResponse(val token: String)
+
+data class RegisterRequest(
+    val nome: String,
+    val email: String,
+    val senha: String,
+    val telefone: String? = null,
+    val assinante: Boolean? = null
+)
+
+data class RegisterResponse(val nome: String, val email: String)
+
 /**
  * Retrofit service mapping the `mathApi` routes.
  */
@@ -63,6 +77,14 @@ interface ApiService {
 
     @POST("energia/trabalho")
     suspend fun energiaTrabalho(@Body params: JsonObject): EnergiaResponse
+
+    // Auth
+    @POST("auth/login")
+    suspend fun login(@Body request: LoginRequest): LoginResponse
+
+    // Create user (register)
+    @POST("users")
+    suspend fun register(@Body request: RegisterRequest): RegisterResponse
 
     // Generic POST helper
     @POST("{path}")
